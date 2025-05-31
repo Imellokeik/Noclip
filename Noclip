@@ -1,13 +1,43 @@
 local s=Instance.new("ScreenGui",game.CoreGui)
 s.Name="AutoSkipUI"
+s.ResetOnSpawn=false
+s.IgnoreGuiInset=true
 
 local f=Instance.new("Frame",s)
 f.Size=UDim2.new(0,110,0,30)
 f.Position=UDim2.new(0,20,0,150)
 f.BackgroundColor3=Color3.fromRGB(0,0,0)
 f.BorderSizePixel=0
-f.Active=true
-f.Draggable=true
+
+local uis=game:GetService("UserInputService")
+local dragging=false
+local dragInput,pos,offset
+
+f.InputBegan:Connect(function(i)
+	if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+		dragging=true
+		offset=i.Position-f.AbsolutePosition
+	end
+end)
+
+f.InputEnded:Connect(function(i)
+	if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+		dragging=false
+	end
+end)
+
+f.InputChanged:Connect(function(i)
+	if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then
+		dragInput=i
+	end
+end)
+
+uis.InputChanged:Connect(function(i)
+	if i==dragInput and dragging then
+		local pos=UDim2.new(0,i.Position.X-offset.X,0,i.Position.Y-offset.Y)
+		f.Position=pos
+	end
+end)
 
 local tgl=Instance.new("TextButton",f)
 tgl.Size=UDim2.new(1,0,1,0)
@@ -19,7 +49,7 @@ tgl.TextSize=12
 tgl.BorderSizePixel=0
 tgl.AutoButtonColor=false
 
-local skip=game:GetService("ReplicatedStorage"):FindFirstChild("VoteSkip")
+local skip=game:GetService("ReplicatedStorage"):FindFirstChild("Events") and game.ReplicatedStorage.Events:FindFirstChild("VoteSkip")
 local on=false
 
 tgl.MouseButton1Click:Connect(function()
