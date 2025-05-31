@@ -1,168 +1,39 @@
 local s=Instance.new("ScreenGui",game.CoreGui)
-s.Name="RemotePanel"
+s.Name="AutoSkipUI"
+
 local f=Instance.new("Frame",s)
-f.Size=UDim2.new(0,500,0,400)
-f.Position=UDim2.new(0,20,0,100)
+f.Size=UDim2.new(0,130,0,30)
+f.Position=UDim2.new(0,15,0,150)
 f.BackgroundColor3=Color3.fromRGB(30,30,30)
+f.BorderSizePixel=0
 f.Active=true
 f.Draggable=true
-local t=Instance.new("TextLabel",f)
-t.Size=UDim2.new(1,0,0,25)
-t.BackgroundColor3=Color3.fromRGB(20,20,20)
-t.Text="Remote Events + Functions"
-t.TextColor3=Color3.fromRGB(255,255,255)
-t.Font=Enum.Font.Code
-t.TextSize=14
-local c=Instance.new("ScrollingFrame",f)
-c.Position=UDim2.new(0,0,0,25)
-c.Size=UDim2.new(1,0,1,-25)
-c.CanvasSize=UDim2.new(0,0,0,0)
-c.ScrollBarThickness=6
-c.AutomaticCanvasSize=Enum.AutomaticSize.Y
-c.BackgroundTransparency=1
-local l=Instance.new("UIListLayout",c)
-l.SortOrder=Enum.SortOrder.LayoutOrder
-
-local v=game:FindFirstChild("voteskip",true)
-if v and v:IsA("RemoteEvent") then
-	local b=Instance.new("TextButton",c)
-	b.Size=UDim2.new(1,-10,0,24)
-	b.Text=v:GetFullName().." [Event]"
-	b.BackgroundColor3=Color3.fromRGB(50,50,50)
-	b.TextColor3=Color3.fromRGB(255,255,255)
-	b.Font=Enum.Font.Code
-	b.TextSize=12
-	b.TextXAlignment=Enum.TextXAlignment.Left
-	b.MouseButton1Click:Connect(function()
-		pcall(function()
-			v:FireServer()
-		end)
-	end)
-end
 
 local tgl=Instance.new("TextButton",f)
-tgl.Size=UDim2.new(0,20,0,20)
-tgl.Position=UDim2.new(1,-25,0,5)
+tgl.Size=UDim2.new(1,0,1,0)
 tgl.BackgroundColor3=Color3.fromRGB(255,0,0)
-tgl.Text=""
+tgl.Text="Auto Skip: Off"
+tgl.TextColor3=Color3.new(1,1,1)
+tgl.Font=Enum.Font.Code
+tgl.TextSize=14
+tgl.BorderSizePixel=0
 tgl.AutoButtonColor=false
 
+local skip=game:GetService("ReplicatedStorage"):FindFirstChild("VoteSkip")
 local on=false
+
 tgl.MouseButton1Click:Connect(function()
 	on=not on
 	tgl.BackgroundColor3=on and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,0,0)
-	if on then
-		local plr=game.Players.LocalPlayer
-		local rs=game:GetService("ReplicatedStorage")
-		local tf=rs:WaitForChild("Towers")
-		local sp=rs:WaitForChild("Functions"):WaitForChild("SpawnTower")
-		local gui=Instance.new("ScreenGui",plr:WaitForChild("PlayerGui"))
-		gui.Name="TowerSpawnGUI"
-		gui.ResetOnSpawn=false
-		gui.IgnoreGuiInset=true
-		local fr=Instance.new("Frame",gui)
-		fr.Size=UDim2.new(0,300,0,30)
-		fr.Position=UDim2.new(0.5,-150,0.25,0)
-		fr.BackgroundColor3=Color3.fromRGB(30,30,30)
-		fr.BorderSizePixel=0
-		local sb=Instance.new("TextButton",fr)
-		sb.Size=UDim2.new(0.7,0,1,0)
-		sb.Text="Select Tower"
-		sb.TextColor3=Color3.new(1,1,1)
-		sb.BackgroundColor3=Color3.fromRGB(60,60,60)
-		sb.BorderSizePixel=0
-		local spb=Instance.new("TextButton",fr)
-		spb.Size=UDim2.new(0.3,0,1,0)
-		spb.Position=UDim2.new(0.7,0,0,0)
-		spb.Text="Spawn"
-		spb.TextColor3=Color3.new(1,1,1)
-		spb.BackgroundColor3=Color3.fromRGB(80,120,80)
-		spb.BorderSizePixel=0
-		local df=Instance.new("Frame",fr)
-		df.Size=UDim2.new(1,0,0,180)
-		df.Position=UDim2.new(0,0,1,0)
-		df.BackgroundColor3=Color3.fromRGB(40,40,40)
-		df.Visible=false
-		df.BorderSizePixel=0
-		local sbx=Instance.new("TextBox",df)
-		sbx.Size=UDim2.new(1,-10,0,25)
-		sbx.Position=UDim2.new(0,5,0,5)
-		sbx.PlaceholderText="Search Tower..."
-		sbx.Text=""
-		sbx.TextColor3=Color3.new(1,1,1)
-		sbx.BackgroundColor3=Color3.fromRGB(60,60,60)
-		sbx.BorderSizePixel=0
-		local dd=Instance.new("ScrollingFrame",df)
-		dd.Position=UDim2.new(0,5,0,35)
-		dd.Size=UDim2.new(1,-10,1,-40)
-		dd.CanvasSize=UDim2.new(0,0,0,0)
-		dd.BackgroundColor3=Color3.fromRGB(50,50,50)
-		dd.ScrollBarThickness=6
-		dd.BorderSizePixel=0
-		dd.ClipsDescendants=true
-		local lo=Instance.new("UIListLayout",dd)
-		lo.SortOrder=Enum.SortOrder.LayoutOrder
-		lo.Padding=UDim.new(0,2)
-		local sel=nil
-		local function r(fl)
-			for _,c in ipairs(dd:GetChildren()) do
-				if c:IsA("Frame") then c:Destroy() end
-			end
-			local ct=0
-			for _,tw in ipairs(tf:GetChildren()) do
-				if not fl or tw.Name:lower():find(fl:lower()) then
-					ct+=1
-					local e=Instance.new("Frame",dd)
-					e.Size=UDim2.new(1,-4,0,25)
-					e.BackgroundColor3=Color3.fromRGB(70,70,70)
-					e.BorderSizePixel=0
-					local n=Instance.new("TextButton",e)
-					n.Size=UDim2.new(0.7,0,1,0)
-					n.Position=UDim2.new(0,0,0,0)
-					n.Text=tw.Name
-					n.TextColor3=Color3.new(1,1,1)
-					n.BackgroundTransparency=1
-					n.TextXAlignment=Enum.TextXAlignment.Left
-					local pr=Instance.new("TextLabel",e)
-					pr.Size=UDim2.new(0.3,-5,1,0)
-					pr.Position=UDim2.new(0.7,0,0,0)
-					pr.BackgroundTransparency=1
-					pr.TextColor3=Color3.fromRGB(200,255,200)
-					pr.TextXAlignment=Enum.TextXAlignment.Right
-					pr.Font=Enum.Font.SourceSans
-					pr.TextScaled=true
-					local p="???"
-					pcall(function() p=tostring(tf[tw.Name].Config.Price.Value) end)
-					pr.Text="$"..p
-					n.MouseButton1Click:Connect(function()
-						sel=tw.Name
-						sb.Text="Selected: "..tw.Name
-						df.Visible=false
-					end)
-				end
-			end
-			dd.CanvasSize=UDim2.new(0,0,0,27*ct)
+	tgl.Text=on and "Auto Skip: On" or "Auto Skip: Off"
+end)
+
+task.spawn(function()
+	while task.wait(1) do
+		if on and skip then
+			pcall(function()
+				skip:FireServer()
+			end)
 		end
-		sbx:GetPropertyChangedSignal("Text"):Connect(function()
-			r(sbx.Text)
-		end)
-		sb.MouseButton1Click:Connect(function()
-			df.Visible=not df.Visible
-			if df.Visible then
-				sbx.Text=""
-				r("")
-			end
-		end)
-		spb.MouseButton1Click:Connect(function()
-			if sel then
-				local ch=plr.Character
-				if ch and ch:FindFirstChild("HumanoidRootPart") then
-					local a={sel,CFrame.new(ch.HumanoidRootPart.Position)}
-					sp:InvokeServer(unpack(a))
-				end
-			else
-				sb.Text="❗ Select a tower first"
-			end
-		end)
 	end
 end)
