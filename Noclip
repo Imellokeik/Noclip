@@ -36,8 +36,7 @@ end)
 
 uis.InputChanged:Connect(function(i)
 	if i==dragInput and dragging then
-		local pos=UDim2.new(0,i.Position.X-offset.X,0,i.Position.Y-offset.Y)
-		f.Position=pos
+		f.Position=UDim2.new(0,i.Position.X-offset.X,0,i.Position.Y-offset.Y)
 	end
 end)
 
