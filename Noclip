@@ -49,7 +49,8 @@ tgl.TextSize=12
 tgl.BorderSizePixel=0
 tgl.AutoButtonColor=false
 
-local skip=game:GetService("ReplicatedStorage"):FindFirstChild("Events") and game.ReplicatedStorage.Events:FindFirstChild("VoteSkip")
+local evs=game:GetService("ReplicatedStorage"):FindFirstChild("Events")
+local skip=evs and evs:FindFirstChild("VoteSkip")
 local on=false
 
 tgl.MouseButton1Click:Connect(function()
@@ -60,7 +61,7 @@ end)
 
 task.spawn(function()
 	while task.wait(1) do
-		if on and skip then
+		if on and skip and skip:IsA("RemoteEvent") then
 			pcall(function()
 				skip:FireServer()
 			end)
