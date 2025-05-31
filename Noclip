@@ -2,9 +2,9 @@ local s=Instance.new("ScreenGui",game.CoreGui)
 s.Name="AutoSkipUI"
 
 local f=Instance.new("Frame",s)
-f.Size=UDim2.new(0,130,0,30)
-f.Position=UDim2.new(0,15,0,150)
-f.BackgroundColor3=Color3.fromRGB(30,30,30)
+f.Size=UDim2.new(0,110,0,30)
+f.Position=UDim2.new(0,20,0,150)
+f.BackgroundColor3=Color3.fromRGB(0,0,0)
 f.BorderSizePixel=0
 f.Active=true
 f.Draggable=true
@@ -15,7 +15,7 @@ tgl.BackgroundColor3=Color3.fromRGB(255,0,0)
 tgl.Text="Auto Skip: Off"
 tgl.TextColor3=Color3.new(1,1,1)
 tgl.Font=Enum.Font.Code
-tgl.TextSize=14
+tgl.TextSize=12
 tgl.BorderSizePixel=0
 tgl.AutoButtonColor=false
 
